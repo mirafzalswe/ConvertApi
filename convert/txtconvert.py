@@ -72,7 +72,7 @@ def convert_latin(txt, to_type):
         txt_modified = ((txt.replace('sh', 'ш').replace('ch', 'ч').replace('Oʻ','У')
                         .replace('oʻ','у').replace('gʻ', 'ғ')).replace('Gʻ','F').replace('Sh', 'Ш')
                         .replace('Ch', 'Ч').replace('yo','ё').replace('ya','я').replace('Yo','Ё').replace('Ya','Я')
-                        .replace('yu', 'ю').replace('Yu','Ю').replace('aʼ', 'ъ'))
+                        .replace('yu', 'ю').replace('Yu','Ю').replace('aʼ', 'aъ'))
 
         for char in txt_modified:
             result += convert.get(char, char)

@@ -32,8 +32,13 @@ class ConvertFileAPIView(generics.CreateAPIView):
         return Response({'converted_text': converted_file}, status=status.HTTP_200_OK)
 
 
-def somsa(request):
-    return HttpResponse('HEll world')
+def main_page(request):
+    return HttpResponse('''
+   <br>  for text 
+   <br>  <h3> /api/text </h3>
+   <br>  for file
+   <br>  <h3> /api/file </h3>
+    ''')
 
 
 from django.shortcuts import render
