@@ -6,7 +6,7 @@ from rest_framework import status, generics
 from .models import ChoosePatternModel, ChoosePatternModelFile
 from .serializers import ConvertSerializer, ConvertSerializerFile
 
-from .txtconvert import convert_latin, covnvert_file
+from .txtconvert import convert_latin, convert_file
 
 class ConvertAPIView(generics.CreateAPIView):
     serializer_class = ConvertSerializer
@@ -28,7 +28,7 @@ class ConvertFileAPIView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         file = serializer.validated_data['file']
         to_type = serializer.validated_data['pattern']
-        converted_file = covnvert_file(to_type, file)
+        converted_file = convert_file(to_type, file)
         return Response({'converted_text': converted_file}, status=status.HTTP_200_OK)
 
 

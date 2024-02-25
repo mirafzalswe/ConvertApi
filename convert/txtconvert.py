@@ -1,4 +1,6 @@
-convert = {
+import re
+
+CONVERSION_MAP = {
     'A': 'А',
     'B': 'Б',
     'C': 'С',
@@ -6,7 +8,7 @@ convert = {
     'E': 'Е',
     'F': 'Ф',
     'G': 'Г',
-    'H': 'X',
+    'H': 'Х',
     'I': 'И',
     'J': 'Ж',
     'K': 'К',
@@ -53,46 +55,41 @@ convert = {
     'z': 'з',
 }
 
-
-
+REVERSE_CONVERSION_MAP = {v: k for k, v in CONVERSION_MAP.items()}
 
 def convert_latin(txt, to_type):
-    '''
-    (text) write to text which u going to convert
-    (to_type) choose language which u going to convert
-    '''
-    result = ""
-    conversion_dict = {v: k for k, v in convert.items()}  # Создаем словарь с обратным порядком ключей и значений
+    """
+    Convert text between Latin and Cyrillic alphabets.
 
+    :param txt: Text to be converted.
+    :param to_type: Target type of conversion ('latin' or 'cyrillic').
+    :return: Converted text.
+    """
+    result = ""
 
     if to_type == "latin":
         for char in txt:
-            result += conversion_dict.get(char, char)  # Используем get() для поиска соответствующего значения
+            result += REVERSE_CONVERSION_MAP.get(char, char)
     elif to_type == "cyrillic":
-        txt_modified = ((txt.replace('sh', 'ш').replace('ch', 'ч').replace('Oʻ','У')
-                        .replace('oʻ','у').replace('gʻ', 'ғ')).replace('Gʻ','F').replace('Sh', 'Ш')
-                        .replace('Ch', 'Ч').replace('yo','ё').replace('ya','я').replace('Yo','Ё').replace('Ya','Я')
-                        .replace('yu', 'ю').replace('Yu','Ю').replace('aʼ', 'aъ'))
-
-        for char in txt_modified:
-            result += convert.get(char, char)
+        txt_modified = re.sub(r'sh|ch|Oʻ|oʻ|gʻ|Gʻ|Sh|Ch|yo|ya|Yo|Ya|yu|Yu|aʼ', lambda x: CONVERSION_MAP[x.group()], txt)
+        result = ''.join(CONVERSION_MAP.get(char, char) for char in txt_modified)
     else:
-        for char in txt:
-            result += char
+        result = txt
 
     return result
 
+def convert_file(language, file_path):
+    """
+    Convert the content of a file between Latin and Cyrillic alphabets.
 
-#salom nima gap
-def covnvert_file(language, file):
-    '''
-    (language) bu yerga til kiritasiz qaysi tilda
-    (file) bu yerga failni nomini kiriting
-    '''
+    :param language: Target type of conversion ('latin' or 'cyrillic').
+    :param file_path: Path to the file.
+    :return: Converted text or error message.
+    """
     try:
-        file_content = file.read().decode('utf-8')
-        result = convert_latin(file_content, language)
+        with open(file_path, 'r', encoding='utf-8') as file:
+            file_content = file.read()
+            result = convert_latin(file_content, language)
         return result
     except Exception as e:
-
-        return f'''Error reading file: {str(e)}" reading file: {str(e)}'''
+        return f"Error reading file: {str(e)}"
