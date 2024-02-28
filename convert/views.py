@@ -40,7 +40,3 @@ def main_page(request):
    <br>  <h3> /api/file </h3>
     ''')
 
-
-from django.shortcuts import render
-
-# Create your views here.

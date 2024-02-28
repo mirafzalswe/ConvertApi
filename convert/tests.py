@@ -1,3 +1,4 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
 # Create your tests here.
@@ -10,33 +11,34 @@ from .models import ChoosePatternModel, ChoosePatternModelFile
 class ConvertAPITestCase(APITestCase):
 
     def test_text_conversion_cyrillic_to_latin(self):
-        # Test text conversion from cyrillic to latin
-        url = reverse('convert-text-api')
+        txt = '''
+        Тошкент — Ўзбекистоннинг пойтахти ва енг йирик шаҳри бўлиб, аҳолиси бўйича 
+        Марказий Осиёдаги енг йирик қадимий шаҳарлардан бири ҳисобланади.
+        '''
+        cyrillic_txt  = '''
+        Toshkent — Oʻzbekistonning poytaxti va eng yirik shahri boʻlib, aholisi boʻyicha 
+        Markaziy Osiyodagi eng yirik qadimiy shaharlardan biri hisoblanadi. 
+        '''
         data = {'text': 'Привет мир', 'pattern': 'latin'}
-        response = self.client.post(url, data, format='json')
-
+        response = self.client.post('/api/text/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['converted_text'], 'Privet mir')
+        self.assertEqual(response.data['converted_text'], cyrillic_txt)
 
     def test_text_conversion_invalid_pattern(self):
-        # Test text conversion with an invalid pattern
-        url = reverse('convert-text-api')
         data = {'text': 'Hello world', 'pattern': 'invalid_pattern'}
-        response = self.client.post(url, data, format='json')
-
+        response = self.client.post('/api/text/', data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
     def test_file_conversion_latin_to_cyrillic(self):
-        # Test file conversion from latin to cyrillic
-        url = reverse('convert-file-api')
-        file_content = 'Hello world'
+        url = reverse('file-convert')
+        file_content = '''
+        Toshkent shahrining YIMi $2,74 milliardni tashkil etadi va bu koʻrsatkich 
+         Oʻzbekistondagi eng katta YIMga ega shahar boʻlib kelmoqda.
+        '''
         file_data = {'file': file_content, 'pattern': 'cyrillic'}
-
         response = self.client.post(url, file_data, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['converted_text'], 'Хелло ворлд')
-
-    # Add more test cases as needed based on your specific requirements
+        self.assertEqual(response.data['converted_text'], '''Тошкент шаҳрининг ЙИМи $2,74 миллиардни ташкил етади ва бу кўрсаткич 
+        Ўзбекистондаги енг катта ЙИМга ега шаҳар бўлиб келмоқда.''')
 

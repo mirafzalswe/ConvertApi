@@ -4,8 +4,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("api/text/", views.ConvertAPIView.as_view(), name="user-list"),
-    path("api/file/", views.ConvertFileAPIView.as_view(), name="text-convert"),
+    path("api/text/", views.ConvertAPIView.as_view(), name="text-convert"),
+    path("api/file/", views.ConvertFileAPIView.as_view(), name="file-convert"),
     path("", views.main_page, name="index")
 ]
 

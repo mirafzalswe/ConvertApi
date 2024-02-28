@@ -1,6 +1,14 @@
 import re
-
-CONVERSION_MAP = {
+CONVERSION_LETTERS = {
+    'Sh': 'Ш',
+    'Ch': 'Ч',
+    "G'": 'Ғ',
+    'Gʻ': 'Ғ',
+    'Yo': 'Ё',
+    'Ya': 'Я',
+    'Yu': 'Ю',
+    'Ts': 'Ц',
+    'Shch': 'Щ',
     'A': 'А',
     'B': 'Б',
     'C': 'С',
@@ -8,7 +16,7 @@ CONVERSION_MAP = {
     'E': 'Е',
     'F': 'Ф',
     'G': 'Г',
-    'H': 'Х',
+    'H': 'Ҳ',
     'I': 'И',
     'J': 'Ж',
     'K': 'К',
@@ -17,7 +25,7 @@ CONVERSION_MAP = {
     'N': 'Н',
     'O': 'О',
     'P': 'П',
-    'Q': 'К',
+    'Q': 'Қ',
     'R': 'Р',
     'S': 'С',
     'T': 'Т',
@@ -34,7 +42,7 @@ CONVERSION_MAP = {
     'e': 'е',
     'f': 'ф',
     'g': 'г',
-    'h': 'х',
+    'h': 'ҳ',
     'i': 'и',
     'j': 'ж',
     'k': 'к',
@@ -43,21 +51,41 @@ CONVERSION_MAP = {
     'n': 'н',
     'o': 'о',
     'p': 'п',
-    'q': 'к',
+    'q': 'қ',
     'r': 'р',
     's': 'с',
     't': 'т',
     'u': 'у',
     'v': 'в',
     'w': 'в',
-    'x': 'x',
+    'x': 'х',
     'y': 'й',
     'z': 'з',
+    'sh': 'ш',
+    'ch': 'ч',
+    "g'": 'ғ',
+    "gʻ": 'ғ',
+    'yo': 'ё',
+    'ya': 'я',
+    'yu': 'ю',
+    'zh': 'ж',
+    'kh': 'х',
+    'ts': 'ц',
+    'sch': 'щ',
+    # 'aʼ': 'аъ',
+    'Oʻ': 'ў',
+    "O'": 'ў',
+    'oʻ': 'ў',
+    "o'": 'ў',
+    '’': 'ъ',
+    'ʼ':'ъ'
 }
 
-REVERSE_CONVERSION_MAP = {v: k for k, v in CONVERSION_MAP.items()}
 
-def convert_latin(txt, to_type):
+
+REVERSE_CONVERSION_LETTERS = {v: k for k, v in CONVERSION_LETTERS.items()}
+
+def convert_latin(txt:str, to_type:str):
     """
     Convert text between Latin and Cyrillic alphabets.
 
@@ -69,10 +97,12 @@ def convert_latin(txt, to_type):
 
     if to_type == "latin":
         for char in txt:
-            result += REVERSE_CONVERSION_MAP.get(char, char)
+            result += REVERSE_CONVERSION_LETTERS.get(char, char)
     elif to_type == "cyrillic":
-        txt_modified = re.sub(r'sh|ch|Oʻ|oʻ|gʻ|Gʻ|Sh|Ch|yo|ya|Yo|Ya|yu|Yu|aʼ', lambda x: CONVERSION_MAP[x.group()], txt)
-        result = ''.join(CONVERSION_MAP.get(char, char) for char in txt_modified)
+        txt_modified = re.sub(r"Sh|SH|CH|Ch|ch|sh|o'|O'|G'|g'|gʻ|Gʻ|oʻ|Oʻ|kh|Kh|KH|ʻ|zh|Zh|ZH|Ts|ts|sch|SCh|SCH|Sch|Yo|Yu|Ya|yo|yo|ya",
+                              lambda x: CONVERSION_LETTERS[x.group()], txt)
+        for char in txt_modified:
+            result += CONVERSION_LETTERS.get(char, char)
     else:
         result = txt
 
@@ -92,4 +122,4 @@ def convert_file(language, file_path):
             result = convert_latin(file_content, language)
         return result
     except Exception as e:
-        return f"Error reading file: {str(e)}"
+        return f"Error : {str(e)}"
