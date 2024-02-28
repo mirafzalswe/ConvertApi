@@ -74,11 +74,14 @@ CONVERSION_LETTERS = {
     'sch': 'щ',
     # 'aʼ': 'аъ',
     'Oʻ': 'ў',
-    "O'": 'ў',
+    "O'": 'Ў',
     'oʻ': 'ў',
     "o'": 'ў',
+    "O‘": "Ў",
+    "o‘": "ў",
     '’': 'ъ',
-    'ʼ':'ъ'
+    'ʼ':'ъ',
+    "g‘":'ғ',
 }
 
 
@@ -99,7 +102,7 @@ def convert_latin(txt:str, to_type:str):
         for char in txt:
             result += REVERSE_CONVERSION_LETTERS.get(char, char)
     elif to_type == "cyrillic":
-        txt_modified = re.sub(r"Sh|SH|CH|Ch|ch|sh|o'|O'|G'|g'|gʻ|Gʻ|oʻ|Oʻ|kh|Kh|KH|ʻ|zh|Zh|ZH|Ts|ts|sch|SCh|SCH|Sch|Yo|Yu|Ya|yo|yo|ya",
+        txt_modified = re.sub(r"Sh|SH|CH|Ch|ch|sh|o'|O'|G'|g'|gʻ|Gʻ|oʻ|Oʻ|kh|Kh|KH|ʻ|zh|Zh|ZH|Ts|ts|sch|SCh|SCH|Sch|Yo|Yu|Ya|yo|yo|ya|O‘|o‘|g‘",
                               lambda x: CONVERSION_LETTERS[x.group()], txt)
         for char in txt_modified:
             result += CONVERSION_LETTERS.get(char, char)
