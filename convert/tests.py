@@ -11,6 +11,7 @@ from .models import ChoosePatternModel, ChoosePatternModelFile
 class ConvertAPITestCase(APITestCase):
 
     def test_text_conversion_cyrillic_to_latin(self):
+        url = reverse('text-convert')
         txt = '''
         Тошкент — Ўзбекистоннинг пойтахти ва енг йирик шаҳри бўлиб, аҳолиси бўйича 
         Марказий Осиёдаги енг йирик қадимий шаҳарлардан бири ҳисобланади.
@@ -20,13 +21,14 @@ class ConvertAPITestCase(APITestCase):
         Markaziy Osiyodagi eng yirik qadimiy shaharlardan biri hisoblanadi. 
         '''
         data = {'text': 'Привет мир', 'pattern': 'latin'}
-        response = self.client.post('/api/text/', data)
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['converted_text'], cyrillic_txt)
 
     def test_text_conversion_invalid_pattern(self):
+        url = reverse('text-convert')
         data = {'text': 'Hello world', 'pattern': 'invalid_pattern'}
-        response = self.client.post('/api/text/', data)
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
